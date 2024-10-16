@@ -9,12 +9,14 @@ import { DataService } from 'src/app/services/data.service';
 })
 export class HomePage {
 
-  constructor(public dataService: DataService, private navController: NavController) {
-    console.log(this.dataService.currentQuiz);
-  }
+  constructor(public dataService: DataService, private readonly navController: NavController) { }
 
   showList() {
-    this.navController.navigateForward('/question-list')
+    this.navController.navigateForward('/question-list');
+  }
+
+  startQuiz() {
+    this.navController.navigateForward('/quiz');
   }
 
 }

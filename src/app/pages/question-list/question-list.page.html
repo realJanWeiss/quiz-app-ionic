@@ -20,15 +20,17 @@
   </ion-header>
 
   <ion-list>
-    <ion-item-sliding *ngFor="let q of dataService.currentQuiz.questions">
-      <ion-item (click)="show(q.id)">
-        {{ q.title }}
-      </ion-item>
-      <ion-item-options slide="end">
-        <ion-item-option color="danger" (click)="deleteQuestion(q)">
-          <ion-icon slot="icon-only" name="trash"></ion-icon>
-        </ion-item-option>
-      </ion-item-options>
-    </ion-item-sliding>
+    @for (question of dataService.currentQuiz().questions; track question.id) {
+      <ion-item-sliding>
+        <ion-item (click)="show(question.id)">
+          {{ question.title }}
+        </ion-item>
+        <ion-item-options slide="end">
+          <ion-item-option color="danger" (click)="deleteQuestion(question)">
+            <ion-icon slot="icon-only" name="trash"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+    }
   </ion-list>
 </ion-content>

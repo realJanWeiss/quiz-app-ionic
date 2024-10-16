@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { DataService } from 'src/app/services/data.service';
 import { Question } from 'src/app/services/Question';
@@ -8,12 +8,9 @@ import { Question } from 'src/app/services/Question';
   templateUrl: './question-list.page.html',
   styleUrls: ['./question-list.page.scss'],
 })
-export class QuestionListPage implements OnInit {
+export class QuestionListPage {
 
-  constructor(public dataService: DataService, private navController: NavController) { }
-
-  ngOnInit() {
-  }
+  constructor(public dataService: DataService, private readonly navController: NavController) { }
 
   show(id: string) {
     this.navController.navigateForward(["/question/" + id]);

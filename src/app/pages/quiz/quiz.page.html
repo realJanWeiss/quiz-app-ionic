@@ -1,13 +1,39 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="home"></ion-back-button>
+    </ion-buttons>
     <ion-title>Quiz</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content class="ion-padding" [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large">Quiz</ion-title>
     </ion-toolbar>
   </ion-header>
+
+  @if (quiz() && currentQuestion()) {
+    <p>Punkte: {{ points() }}</p>
+    <p>Question: {{ currentQuestionIndex() + 1 }}/{{ quiz()!.questions.length }}</p>
+    <p>{{ currentQuestion()!.title }}</p>
+
+    <div>
+      @for (answer of currentAnswers(); track (answer || $index)) {
+        <ion-button fill="outline" expand="block" (click)="submitAnswer($index + 1)">{{ answer }}</ion-button>
+      }
+    </div>
+  } @else if (quiz() && currentQuestionIndex() === quiz()!.questions.length) {
+    <ion-card class="ion-text-center">
+      <ion-card-header>
+        <ion-card-title>
+          <ion-icon name="sparkles" />
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        You scored {{ points() }}/{{ quiz()!.questions.length }}
+      </ion-card-content>
+    </ion-card>
+  }
 </ion-content>
