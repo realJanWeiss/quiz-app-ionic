@@ -4,13 +4,6 @@ import { DataService } from 'src/app/services/data.service';
 import { Question } from 'src/app/services/Question';
 import { Quiz } from 'src/app/services/Quiz';
 
-
-interface Notification {
-  id: string;
-  message: string;
-  icon: string;
-}
-
 @Component({
   selector: 'app-quiz',
   templateUrl: './quiz.page.html',
