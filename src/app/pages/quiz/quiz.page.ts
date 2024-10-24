@@ -74,11 +74,13 @@ export class QuizPage {
     const toast = await this.toastController.create(
       answeredCorrectly
         ? {
+          color: 'success',
           duration: 2000,
           message: 'Correct!',
           icon: 'happy-outline'
         }
         : {
+          color: 'danger',
           duration: 2000,
           message: 'Wrong',
           icon: 'sad-outline'
