@@ -1,0 +1,24 @@
+{
+  "id": "localremote",
+  "questions": [
+    {
+      "id": "d8a68efd-e22c-4f2b-815b-44dc0b2f3e22",
+      "title": "Hallöchen",
+      "a1": "lokal",
+      "a2": "remote",
+      "a3": "aljdsfjlwer",
+      "a4": "sdnfjk",
+      "correct": 3
+    },
+    {
+      "id": "ea5c86d5-25e1-482d-b574-1baf21747586",
+      "title": "Hauptstadt von Frankreich",
+      "a1": "Marseille",
+      "a2": "Paris",
+      "a3": "Vienne",
+      "a4": "Blub",
+      "correct": 2
+    }
+  ],
+  "quizName": "mein lokales remote Quiz"
+}

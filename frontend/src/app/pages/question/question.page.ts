@@ -16,7 +16,6 @@ export class QuestionPage {
     const questionId = this.route.snapshot.paramMap.get("id") as string;
 
     this.question = this.dataService.getQuestion(questionId) ?? this.dataService.newQuestion();
-    console.log(this.question);
   }
 
   ionViewWillLeave() {

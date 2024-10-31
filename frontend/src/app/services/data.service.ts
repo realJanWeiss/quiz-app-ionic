@@ -3,6 +3,7 @@ import { Injectable, signal } from '@angular/core';
 import { Quiz } from './Quiz';
 import { Question } from './Question';
 import { Preferences } from '@capacitor/preferences';
+import { HttpClient } from '@angular/common/http';
 
 const STORAGE_KEY = 'quiz';
 
@@ -19,11 +20,21 @@ export class DataService {
 
   loading = signal(true);
 
-  constructor() {
-    this.loadQuiz();
+  constructor(private http: HttpClient) {
+    // this.loadLocalQuiz();
+    this.loadRemoteJSON();
   }
 
-  public async loadQuiz() {
+  private loadRemoteJSON() {
+    this.http.get<Quiz>('https://schmiedl.co.at/json_cors/data.json').subscribe(loadedData => {
+      if (loadedData) {
+        this.currentQuiz.set(loadedData);
+        this.loading.set(false);
+      }
+    });
+  }
+
+  private async loadLocalQuiz() {
     const { value } = await Preferences.get({ key: STORAGE_KEY });
     if (!value) return;
 
@@ -35,7 +46,11 @@ export class DataService {
   }
 
   public saveQuiz() {
-    Preferences.set({ key: STORAGE_KEY, value: JSON.stringify(this.currentQuiz()) });
+    console.log(JSON.stringify(this.currentQuiz()));
+    Preferences.set({
+      key: STORAGE_KEY,
+      value: JSON.stringify(this.currentQuiz())
+    });
   }
 
   public getQuestion(id: string): Question | undefined {
