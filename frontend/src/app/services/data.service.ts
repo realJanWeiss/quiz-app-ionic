@@ -1,9 +1,9 @@
 import { v4 as uuid } from 'uuid';
 import { Injectable, signal } from '@angular/core';
+import { Preferences } from '@capacitor/preferences';
 import { Quiz } from './Quiz';
 import { Question } from './Question';
-import { Preferences } from '@capacitor/preferences';
-import { HttpClient } from '@angular/common/http';
+import { QuizResponseDTO, QuizzesService } from '../../api-client';
 
 const STORAGE_KEY = 'quiz';
 
@@ -15,23 +15,29 @@ export class DataService {
   public currentQuiz = signal<Quiz>({
     id: '',
     questions: [],
-    quizName: 'mein Quiz'
+    quizName: 'mein Quiz',
   });
+
+  public remoteQuizzes = signal<QuizResponseDTO[] | undefined>(undefined);
 
   loading = signal(true);
 
-  constructor(private http: HttpClient) {
-    // this.loadLocalQuiz();
-    this.loadRemoteJSON();
+  constructor(private readonly quizzesService: QuizzesService) {
+    this.loadLocalQuiz();
   }
 
-  private loadRemoteJSON() {
-    this.http.get<Quiz>('https://schmiedl.co.at/json_cors/data.json').subscribe(loadedData => {
-      if (loadedData) {
-        this.currentQuiz.set(loadedData);
-        this.loading.set(false);
+  public fetchRemoteQuizzes() {
+    this.quizzesService.quizzesControllerGetAllQuizzes().subscribe(loadedData => {
+      if (loadedData?.length) {
+        this.remoteQuizzes.set(loadedData);
       }
     });
+  }
+
+  public useRemoteQuiz(quizId: string) {
+    const foundQuiz = this.remoteQuizzes()?.find(q => q.id === quizId)
+    if (!foundQuiz) return;
+    this.currentQuiz.set(foundQuiz);
   }
 
   private async loadLocalQuiz() {

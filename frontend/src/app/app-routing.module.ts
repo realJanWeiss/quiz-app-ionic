@@ -23,6 +23,10 @@ const routes: Routes = [
     path: 'quiz',
     loadChildren: () => import('./pages/quiz/quiz.module').then( m => m.QuizPageModule)
   },
+  {
+    path: 'remote-quizzes',
+    loadChildren: () => import('./remote-quizzes/remote-quizzes.module').then( m => m.RemoteQuizzesPageModule)
+  },
 ];
 
 @NgModule({

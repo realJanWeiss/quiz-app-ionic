@@ -1,8 +1,27 @@
-import { OmitType } from '@nestjs/swagger';
+import { ApiProperty, PickType } from '@nestjs/swagger';
 import { QuestionResponseDTO } from './question.response.dto';
 import { QuizBaseDTO } from '../Base/quiz.base.dto';
+import { Type } from 'class-transformer';
+import {
+  ArrayMinSize,
+  IsArray,
+  IsNotEmpty,
+  ValidateNested,
+} from 'class-validator';
 
-export class QuizResponseDTO extends OmitType(QuizBaseDTO, [] as const) {
+export class QuizResponseDTO extends PickType(QuizBaseDTO, [
+  'id',
+  'quizName',
+  'createdAt',
+] as const) {
+  @ApiProperty({ type: () => [QuestionResponseDTO], minItems: 1 })
+  @IsArray()
+  @IsNotEmpty()
+  @ArrayMinSize(1)
+  @Type(() => QuestionResponseDTO)
+  @ValidateNested({ each: true })
+  questions: QuestionResponseDTO[];
+
   constructor(
     id: string,
     quizName: string,

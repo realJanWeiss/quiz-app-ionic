@@ -15,6 +15,10 @@ export class HomePage {
     this.navController.navigateForward('/question-list');
   }
 
+  goToRemoteQuizzes() {
+    this.navController.navigateForward('/remote-quizzes');
+  }
+
   startQuiz() {
     this.navController.navigateForward('/quiz');
   }
