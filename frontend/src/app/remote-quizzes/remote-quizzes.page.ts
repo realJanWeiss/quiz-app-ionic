@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { QuizResponseDTO } from 'src/api-client';
 import { DataService } from '../services/data.service';
 
 @Component({
@@ -13,10 +12,6 @@ export class RemoteQuizzesPage implements OnInit {
 
   ngOnInit() {
     this.dataService.fetchRemoteQuizzes()
-  }
-
-  useRemoteQuiz(quiz: QuizResponseDTO) {
-    this.dataService.useRemoteQuiz(quiz.id)
   }
 
 }

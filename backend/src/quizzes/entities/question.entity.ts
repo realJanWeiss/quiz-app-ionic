@@ -9,6 +9,7 @@ import {
   VersionColumn,
 } from 'typeorm';
 import { QuizEntity } from './quiz.entity';
+import { QuestionUpdateRequestDTO } from '../dtos/Request/question.update.request.dto';
 
 @Entity('questions')
 export class QuestionEntity {
@@ -60,5 +61,21 @@ export class QuestionEntity {
     this.a4 = a4;
     this.correct = correct;
     this.sortIdx = sortIdx;
+  }
+
+  public static mapToEntity(
+    question: QuestionUpdateRequestDTO,
+  ): QuestionEntity {
+    const questionEntity = new QuestionEntity(
+      question.title,
+      question.a1,
+      question.a2,
+      question.a3,
+      question.a4,
+      question.correct,
+      question.sortIdx,
+    );
+    questionEntity.id = question.id;
+    return questionEntity;
   }
 }

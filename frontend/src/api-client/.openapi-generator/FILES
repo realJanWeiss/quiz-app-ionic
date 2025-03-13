@@ -12,7 +12,9 @@ model/loginRequestDTO.ts
 model/models.ts
 model/questionRequestDTO.ts
 model/questionResponseDTO.ts
+model/questionUpdateRequestDTO.ts
 model/quizRequestDTO.ts
 model/quizResponseDTO.ts
+model/quizUpdateRequestDTO.ts
 param.ts
 variables.ts

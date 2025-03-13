@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, computed } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { DataService } from 'src/app/services/data.service';
 import { Question } from 'src/app/services/Question';
@@ -9,6 +9,7 @@ import { Question } from 'src/app/services/Question';
   styleUrls: ['./question-list.page.scss'],
 })
 export class QuestionListPage {
+  readonly isLocalOnly = computed<boolean>(() => this.dataService.currentQuiz().id === '');
 
   constructor(public dataService: DataService, private readonly navController: NavController) { }
 
@@ -20,4 +21,13 @@ export class QuestionListPage {
     this.dataService.deleteQuestion(question);
   }
 
+  public publishQuiz() {
+    this.dataService.saveRemoteQuiz();
+    this.navController.navigateForward(['/']);
+  }
+
+  public updateQuiz() {
+    this.dataService.updateRemoteQuiz();
+    this.navController.navigateForward(['/']);
+  }
 }

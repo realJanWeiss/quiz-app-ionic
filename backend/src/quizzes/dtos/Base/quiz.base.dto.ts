@@ -8,9 +8,9 @@ export class QuizBaseDTO {
   @ApiProperty()
   createdAt: Date;
 
-  @ApiProperty({ minLength: 10, maxLength: 200 })
+  @ApiProperty({ minLength: 5, maxLength: 200 })
   @IsString()
   @IsNotEmpty()
-  @Length(10, 200)
+  @Length(5, 200)
   quizName: string;
 }

@@ -20,6 +20,13 @@
   </ion-header>
 
   <ion-list>
+    <ion-item>
+      <ion-label position="stacked">Quiz Name:</ion-label>
+      <ion-input [(ngModel)]="dataService.currentQuiz().quizName"></ion-input>
+    </ion-item>
+  </ion-list>
+
+  <ion-list>
     @for (question of dataService.currentQuiz().questions; track question.id) {
       <ion-item-sliding>
         <ion-item (click)="show(question.id)">
@@ -33,4 +40,10 @@
       </ion-item-sliding>
     }
   </ion-list>
+
+  @if (isLocalOnly()) {
+    <ion-button expand="block" color="primary" (click)="publishQuiz()">Publish</ion-button>
+  } @else {
+    <ion-button expand="block" color="primary" (click)="updateQuiz()">Upload changes</ion-button>
+  }
 </ion-content>

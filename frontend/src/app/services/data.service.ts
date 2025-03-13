@@ -3,7 +3,7 @@ import { Injectable, signal } from '@angular/core';
 import { Preferences } from '@capacitor/preferences';
 import { Quiz } from './Quiz';
 import { Question } from './Question';
-import { QuizResponseDTO, QuizzesService } from '../../api-client';
+import { QuestionRequestDTO, QuestionUpdateRequestDTO, QuizRequestDTO, QuizResponseDTO, QuizUpdateRequestDTO, QuizzesService } from '../../api-client';
 
 const STORAGE_KEY = 'quiz';
 
@@ -38,25 +38,79 @@ export class DataService {
     const foundQuiz = this.remoteQuizzes()?.find(q => q.id === quizId)
     if (!foundQuiz) return;
     this.currentQuiz.set(foundQuiz);
+    this.saveLocalQuiz();
   }
 
   private async loadLocalQuiz() {
     const { value } = await Preferences.get({ key: STORAGE_KEY });
-    if (!value) return;
-
-    try {
-      const data = JSON.parse(value);
-      this.currentQuiz.set(data);
-    } catch (e) {}
+    if (value) {
+      try {
+        const data = JSON.parse(value);
+        this.currentQuiz.set(data);
+      } catch (e) {}
+    }
     this.loading.set(false);
   }
 
-  public saveQuiz() {
-    console.log(JSON.stringify(this.currentQuiz()));
+  public saveLocalQuiz() {
     Preferences.set({
       key: STORAGE_KEY,
       value: JSON.stringify(this.currentQuiz())
     });
+  }
+
+  private quizRequestFromQuiz(quiz: Quiz): QuizRequestDTO {
+    return {
+      questions: quiz.questions.map((q, i) => this.questionRequestFromQuestion(q, i)),
+      quizName: quiz.quizName
+    };
+  }
+
+  private quizUpdateRequestFromQuiz(quiz: Quiz): QuizUpdateRequestDTO {
+    return {
+      id: quiz.id,
+      questions: quiz.questions.map((q, i) => this.questionUpdateRequestFromQuestion(q, i)),
+      quizName: quiz.quizName
+    };
+  }
+
+  private questionRequestFromQuestion(question: Question, sortIdx: number): QuestionRequestDTO {
+    return {
+      title: question.title,
+      a1: question.a1,
+      a2: question.a2,
+      a3: question.a3,
+      a4: question.a4,
+      correct: question.correct,
+      sortIdx
+    }
+  }
+
+  private questionUpdateRequestFromQuestion(question: Question, sortIdx: number): QuestionUpdateRequestDTO {
+    return {
+      ...this.questionRequestFromQuestion(question, sortIdx),
+      id: question.id
+    }
+  }
+
+  public saveRemoteQuiz() {
+    this.quizzesService.quizzesControllerInsertNewQuizWithQuestions(
+      this.quizRequestFromQuiz(this.currentQuiz())
+    ).subscribe((savedQuiz) => {
+      this.currentQuiz.set(savedQuiz);
+      this.saveLocalQuiz();
+      this.fetchRemoteQuizzes()
+    })
+  }
+
+  public updateRemoteQuiz() {
+    this.quizzesService.quizzesControllerUpdateQuizWithQuestions(
+      this.quizUpdateRequestFromQuiz(this.currentQuiz())
+    ).subscribe((savedQuiz) => {
+      this.currentQuiz.set(savedQuiz);
+      this.saveLocalQuiz();
+      this.fetchRemoteQuizzes()
+    })
   }
 
   public getQuestion(id: string): Question | undefined {
@@ -79,7 +133,7 @@ export class DataService {
     question.id = uuid();
     this.currentQuiz().questions.push(question);
 
-    this.saveQuiz();
+    this.saveLocalQuiz();
   }
 
   public deleteQuestion(question: Question) {
@@ -88,6 +142,6 @@ export class DataService {
       this.currentQuiz().questions.splice(index, 1);
     }
 
-    this.saveQuiz();
+    this.saveLocalQuiz();
   }
 }

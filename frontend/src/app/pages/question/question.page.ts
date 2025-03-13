@@ -22,6 +22,6 @@ export class QuestionPage {
     if (this.question.id === '0' && this.question.title !== '') {
       this.dataService.addQuestion(this.question);
     }
-    this.dataService.saveQuiz();
+    this.dataService.saveLocalQuiz();
   }
 }
